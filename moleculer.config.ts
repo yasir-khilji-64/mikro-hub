@@ -1,5 +1,6 @@
 import type { BrokerOptions, MetricRegistry, ServiceBroker } from 'moleculer';
 import { Errors } from 'moleculer';
+import { ZodValidator } from 'moleculer-zod-validator';
 
 /**
  * Moleculer ServiceBroker configuration file
@@ -147,7 +148,7 @@ const brokerConfig: BrokerOptions = {
 	},
 
 	// Enable action & event parameter validation. More info: https://moleculer.services/docs/0.14/validating.html
-	validator: true,
+	validator: new ZodValidator(),
 
 	errorHandler: undefined,
 
