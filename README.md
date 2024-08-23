@@ -60,5 +60,5 @@ cd mikro-hub
 You can start the services and api gateway using Docker Compose. Docker Compose will orchestrate all the services and dependencies with one command.
 
 ```bash
-npm run dc:up
+docker-compose up --build
 ```
