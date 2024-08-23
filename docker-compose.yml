@@ -29,6 +29,21 @@ services:
       MONGO_URI: "mongodb://mongo:27017/products"
     depends_on:
       - nats
+      - mongo
+    networks:
+      - internal
+
+  warehouse:
+    build:
+      context: .
+    image: mikro-hub
+    env_file: docker-compose.env
+    environment:
+      SERVICES: warehouse
+      MONGO_URI: "mongodb://mongo:27017/warehouse"
+    depends_on:
+      - nats
+      - mongo
     networks:
       - internal
 
