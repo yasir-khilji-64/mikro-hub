@@ -2,7 +2,6 @@ import { Types } from 'mongoose';
 import { ProductCategories, type ProductType } from './product.schema';
 
 type ProductWithId = ProductType & { _id: Types.ObjectId };
-// Add deterministic _id MongoDB ObjectID. The ObjectID should be similar to '66c7cdb628a51fe906a1a29e'
 const products: ProductWithId[] = [
 	{
 		_id: new Types.ObjectId('66c7cdb628a51fe906a1a29e'),

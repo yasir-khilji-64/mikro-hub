@@ -40,3 +40,4 @@ export const ProductSchema = z.object({
 	sku: z.string().length(10, { message: 'SKU must be exactly 10 characters long' }),
 });
 export type ProductType = z.infer<typeof ProductSchema>;
+export type WithID<T> = T & { id: string };

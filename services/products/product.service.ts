@@ -61,6 +61,7 @@ const ProductService: ServiceSchema<ProductSettings, ProductThis> = {
 			const count = await ProductModel.countDocuments();
 			if (count === 0) {
 				await ProductModel.create(products);
+				this.logger.info('Seeding products');
 			}
 		},
 	},
@@ -69,7 +70,6 @@ const ProductService: ServiceSchema<ProductSettings, ProductThis> = {
 	},
 	async afterConnected(this: ProductThis) {
 		await this.seedDb();
-		this.logger.info('Seeding products');
 	},
 };
 export default ProductService;
