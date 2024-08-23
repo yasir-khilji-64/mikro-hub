@@ -1,11 +1,11 @@
 import { config } from 'dotenv';
-import { type ServiceSchema } from 'moleculer';
+import { type Context, Errors, type ServiceSchema } from 'moleculer';
 import DbService from 'moleculer-db';
 import MongooseAdapter from 'moleculer-db-adapter-mongoose';
 import { z } from 'zod';
-import { listProducts } from './product.action';
+import { buyProduct, getAvailableProducts } from './product.action';
 import { ProductModel } from './product.model';
-import type { ProductSettings, ProductThis } from './product.schema';
+import { buyProductValidator, type ProductSettings, type ProductThis } from './product.schema';
 import products from './seed';
 
 const ProductService: ServiceSchema<ProductSettings, ProductThis> = {
@@ -17,12 +17,30 @@ const ProductService: ServiceSchema<ProductSettings, ProductThis> = {
 	mixins: [DbService],
 	model: ProductModel,
 	actions: {
-		list: {
+		getAvailableProducts: {
 			rest: {
 				method: 'GET',
-				path: '/list',
+				path: '/get-available-products',
 			},
-			handler: listProducts,
+			handler: getAvailableProducts,
+		},
+		buyProduct: {
+			rest: {
+				method: 'PATCH',
+				path: '/buy-product/:id',
+			},
+			params: {
+				id: 'string',
+			},
+			hooks: {
+				before(this: ProductThis, ctx: Context<typeof buyProductValidator.context>) {
+					const result = buyProductValidator.validator.safeParse(ctx.params);
+					if (!result.success) {
+						throw new Errors.ValidationError(JSON.parse(result.error.message), 'VALIDATION_ERROR');
+					}
+				},
+			},
+			handler: buyProduct,
 		},
 	},
 	methods: {

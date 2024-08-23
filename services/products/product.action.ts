@@ -1,10 +1,11 @@
+import { type Context } from 'moleculer';
 import { HttpStatusCodes } from '../../shared/enums/http-status.enum';
 import type { APIResponse } from '../../shared/types/api-response';
 import { ProductModel } from './product.model';
-import { type ProductThis, type ProductType } from './product.schema';
+import { type buyProductValidator, type ProductThis, type ProductType } from './product.schema';
 
 // eslint-disable-next-line import/prefer-default-export
-export async function listProducts(this: ProductThis): Promise<APIResponse<ProductType[]>> {
+export async function getAvailableProducts(this: ProductThis): Promise<APIResponse<ProductType[]>> {
 	const products = await ProductModel.aggregate<ProductType>([
 		{
 			$match: {},
@@ -24,5 +25,16 @@ export async function listProducts(this: ProductThis): Promise<APIResponse<Produ
 	return {
 		status: HttpStatusCodes.OK,
 		data: products,
+	};
+}
+
+export function buyProduct(
+	this: ProductThis,
+	ctx: Context<typeof buyProductValidator.context>,
+): APIResponse<string> {
+	this.logger.info(`ID: ${ctx.params.id}`);
+	return {
+		status: HttpStatusCodes.OK,
+		data: ctx.params.id,
 	};
 }

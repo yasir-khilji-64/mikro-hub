@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type Service, type ServiceSettingSchema } from 'moleculer';
+import { ZodParams } from 'moleculer-zod-validator';
+import { Types } from 'mongoose';
 import { z } from 'zod';
 
 export enum ProductCategories {
@@ -17,10 +19,18 @@ interface ProductMethods {
 	envConfig(): void;
 	seedDb(): Promise<void>;
 }
+export interface ActionBuyProducts {
+	id: string;
+}
 export interface ProductSettings extends ServiceSettingSchema {
 	defaultName: string;
 }
 export type ProductThis = Service<ProductSettings> & ProductVars & ProductMethods;
+export const buyProductValidator = new ZodParams({
+	id: z
+		.string()
+		.refine((value) => Types.ObjectId.isValid(value), { message: 'Provide a valid MongoDB ID' }),
+});
 
 export const ProductSchema = z.object({
 	name: z.string({ required_error: 'Product name is required' }).min(1),
